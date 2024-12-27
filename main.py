@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession, SQLContext
 import os
 import sys
 from pyspark.sql.functions import *
-from pyspark.sql.functions import count
+from pyspark.sql.functions import count, col, desc
 
 os.environ["JAVA_HOME"] = "/Users/alejandropelcastre/Library/Java/JavaVirtualMachines/openjdk-22.0.1/Contents/Home"
 
@@ -34,5 +34,9 @@ count_mnm_df.show(n=60, truncate=False)
 df_ages = spark.createDataFrame([("Ale", 28), ("Abby", 26), ("Bobby", 61),
                                    ("Ale", 42), ("Jules", 30)],
                                   ["Name", "Age"])
-avg_df = df_ages.groupby("Name").agg(avg("Age"))
+avg_df = df_ages.groupby("Name").agg(avg("Age").alias("Avg"))
 avg_df.show()
+
+# Use SQL commands on df
+(avg_df.select("Name")
+ .where("Avg > 30")).show()
