@@ -31,3 +31,7 @@ spark.sql("""SELECT delay, origin, destination,
             END AS Flight_Delays
             FROM us_delay_flights_tbl
             ORDER BY origin, delay DESC""").show(20)
+# Simple and Complex Query with simpler syntax
+(df.select("distance", "origin", "destination")
+ .where("distance > 1000")
+ .orderBy("distance", ascending=False)).show(2)
