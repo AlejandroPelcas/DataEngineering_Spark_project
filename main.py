@@ -29,3 +29,10 @@ count_mnm_df = (df
                 .agg(count("Count").alias("Total"))
                 .orderBy("Total",ascending=False))
 count_mnm_df.show(n=60, truncate=False)
+
+# Use high level spark API to create a simple agg table:
+df_ages = spark.createDataFrame([("Ale", 28), ("Abby", 26), ("Bobby", 61),
+                                   ("Ale", 42), ("Jules", 30)],
+                                  ["Name", "Age"])
+avg_df = df_ages.groupby("Name").agg(avg("Age"))
+avg_df.show()
