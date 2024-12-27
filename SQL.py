@@ -1,4 +1,5 @@
 from pyspark.sql import SparkSession
+from pyspark.sql.types import LongType
 
 spark = (SparkSession
          .builder
@@ -35,3 +36,14 @@ spark.sql("""SELECT delay, origin, destination,
 (df.select("distance", "origin", "destination")
  .where("distance > 1000")
  .orderBy("distance", ascending=False)).show(2)
+
+# You can create your on User Defined Functions as well (UDF)
+def cubed(s):
+    return s**3
+# Register the UDF and then SQL query from a temporary view [You could also use pandas 'pd' to speed up]
+spark.udf.register("cubed", cubed, LongType())
+spark.range(1,9).createOrReplaceTempView("udf_test")
+spark.sql("""SELECT id, cubed(id) AS id_cubed FROM udf_test""").show()
+
+# [TODO:] Learn to use SQL in command-line. Might need to configure $SPARK_HOME
+
